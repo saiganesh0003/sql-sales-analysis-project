@@ -1,0 +1,86 @@
+SELECT 
+  c.CustomerName, 
+  p.ProductName, 
+  s.Quantity, 
+  s.Price, 
+  (s.Quantity * s.Price) AS TotalAmount, 
+  o.OrderDate
+FROM Sales s
+JOIN Orders o ON s.OrderID = o.OrderID
+JOIN Customers c ON o.CustomerID = c.CustomerID
+JOIN Products p ON s.ProductID = p.ProductID
+ORDER BY o.OrderDate;
+
+
+SELECT 
+  DATE_FORMAT(o.OrderDate, '%Y-%m') AS SalesMonth, 
+  SUM(s.Quantity * s.Price) AS MonthlyRevenue
+FROM Sales s
+JOIN Orders o ON s.OrderID = o.OrderID
+GROUP BY SalesMonth
+ORDER BY SalesMonth;
+
+
+SELECT 
+  c.CustomerName, 
+  SUM(s.Quantity * s.Price) AS TotalRevenue
+FROM Sales s
+JOIN Orders o ON s.OrderID = o.OrderID
+JOIN Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+ORDER BY TotalRevenue DESC;
+
+SELECT 
+  p.ProductName, 
+  SUM(s.Quantity) AS TotalUnitsSold
+FROM Sales s
+JOIN Products p ON s.ProductID = p.ProductID
+GROUP BY p.ProductName
+ORDER BY TotalUnitsSold DESC;
+
+SELECT 
+  c.CustomerName, 
+  COUNT(o.OrderID) AS OrderCount
+FROM Orders o
+JOIN Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+ORDER BY OrderCount DESC;
+
+SELECT 
+  p.Category,
+  SUM(s.Quantity * s.Price) AS Revenue
+FROM Sales s
+JOIN Products p ON s.ProductID = p.ProductID
+GROUP BY p.Category
+ORDER BY Revenue DESC;
+
+CREATE VIEW MonthlyRevenue AS
+SELECT 
+  DATE_FORMAT(o.OrderDate, '%Y-%m') AS SalesMonth, 
+  SUM(s.Quantity * s.Price) AS Revenue
+FROM Sales s
+JOIN Orders o ON s.OrderID = o.OrderID
+GROUP BY SalesMonth;
+
+SELECT * FROM MonthlyRevenue;
+
+SELECT 
+  p.ProductName,
+  SUM(s.Quantity) AS TotalQuantitySold
+FROM Sales s
+JOIN Products p ON s.ProductID = p.ProductID
+GROUP BY p.ProductName
+ORDER BY TotalQuantitySold DESC
+LIMIT 1;
+
+SELECT 
+  c.CustomerName, 
+  SUM(s.Quantity * s.Price) AS TotalSpent
+FROM Sales s
+JOIN Orders o ON s.OrderID = o.OrderID
+JOIN Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+ORDER BY TotalSpent DESC;
+
+
+
